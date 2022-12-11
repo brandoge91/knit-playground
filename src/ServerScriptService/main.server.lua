@@ -1,7 +1,4 @@
 local Knit = require(game:GetService("ReplicatedStorage").Packages.Knit)
+local ClicksService = require(game:GetService("ServerStorage").Source.Services.ClicksService)
+Knit.Start():catch(warn)
 
-for _,v in ipairs(game:GetService("ServerStorage").Source.Services:GetDescendants()) do
-    if (v:IsA("ModuleScript")) then
-        require(v)
-    end
-end
