@@ -9,8 +9,8 @@ local ClicksService = Knit.CreateService {
     Client = {
         AddClicksPlease = Knit.CreateSignal(),
         Clicks = Knit.CreateProperty(0),
-    }
-    
+    },
+    ClicksChanged = Signal.new()
 }
 
 -- Variables
@@ -34,6 +34,7 @@ function ClicksService:GiveClicks(player, amount)
     ClicksDataStore:SetAsync(player.UserId, clicks)
     self.AllPlayersClicks[player.UserId] = clicks -- Store clicks for leaderboard
     self.Client.Clicks:SetFor(player, clicks)
+    self.ClicksChanged:Fire(player, clicks)
 end
 
 -- Client Functions
@@ -58,6 +59,18 @@ function ClicksService:KnitInit()
     -- Clean up data when player leaves:
     game:GetService("Players").PlayerRemoving:Connect(function(player)
         self.AllPlayersClicks[player] = nil
+    end)
+
+    self.ClicksChanged:Connect(function(player, clicks)
+        print("Clicks changed for " .. player.Name .. ":", clicks)
+        -- update leaderstats
+        local leaderstats = player:FindFirstChild("leaderstats")
+        if leaderstats then
+            local clicksValue = leaderstats:FindFirstChild("Clicks")
+            if clicksValue then
+                clicksValue.Value = clicks
+            end
+        end
     end)
 
 end

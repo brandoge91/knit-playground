@@ -7,3 +7,5 @@ local ClicksService = Knit.GetService("ClicksService")
 ClicksService:GetClicks(Player):andThen(function(clicks)
     print(clicks)
 end)
+
+
